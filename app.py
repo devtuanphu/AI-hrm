@@ -10,9 +10,12 @@ from geopy.geocoders import Nominatim
 import logging
 from functools import lru_cache
 import time  # Import thêm để đo thời gian
+from flask_cors import CORS
 
 # Cấu hình Flask
 app = Flask(__name__)
+CORS(app, origins=["http://150.95.113.77", "https://ai.nhoytech.site"])
+
 
 # Cấu hình Strapi
 STRAPI_BASE_URL = "http://localhost:1337/api"
