@@ -14,7 +14,7 @@ from flask_cors import CORS
 
 # Cấu hình Flask
 app = Flask(__name__)
-CORS(app, origins=["http://150.95.113.77", "https://ai.nhoytech.site"])
+CORS(app, origins=["http://150.95.113.77", "https://ai.nhoytech.site"], supports_credentials=True)
 
 
 # Cấu hình Strapi
