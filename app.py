@@ -11,6 +11,8 @@ import logging
 from functools import lru_cache
 import time  # Import thêm để đo thời gian
 from flask_cors import CORS
+import socket
+
 
 # Cấu hình Flask
 app = Flask(__name__)
@@ -25,6 +27,15 @@ STRAPI_UPDATE_TOKEN = "6bd0541e8b6593aec7184725e98fc463baab86e206b058c709c121fcf
 
 # Cấu hình Logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
+def get_ipv4_address():
+    try:
+        hostname = socket.gethostname()
+        ipv4_address = socket.gethostbyname(hostname)
+        return ipv4_address
+    except Exception as e:
+        print(f"Error retrieving IPv4 address: {e}")
+        return None
 
 
 @lru_cache(maxsize=100)
@@ -290,7 +301,7 @@ def recognize_face():
                     "name": name,
                     "time": current_time,
                     "location": client_ip,
-                    "ip": client_ip,
+                    "ip": get_ipv4_address(),
                 }
             }
 
