@@ -233,8 +233,8 @@ def recognize_face():
     start_time = time.time()  # Đo thời gian bắt đầu
 
     # Lấy địa chỉ IP từ request
-    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    logging.info(f"Địa chỉ IP của thiết bị: {client_ip}")
+    # client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    # logging.info(f"Địa chỉ IP của thiết bị: {client_ip}")
 
     data = request.get_json()
     if "user_id" not in data or "image" not in data or "shop_id" not in data:
@@ -245,6 +245,7 @@ def recognize_face():
     image_b64 = data["image"]
     shop_id = data["shop_id"]
     name = data["name"]
+    client_ip = data["device_ip"]
 
     try:
         logging.info(f"Xác thực khuôn mặt cho user ID {user_id}...")
@@ -258,6 +259,7 @@ def recognize_face():
         logging.info(f"Thời gian lấy thông tin user: {time.time() - step_time:.2f}s")
 
         step_time = time.time()
+        logging.info(f"face: {user['face']}")
         if "face" not in user or not user["face"]:
             logging.error(f"User ID {user_id} chưa có dữ liệu khuôn mặt.")
             return jsonify({"success": False, "message": "User chưa có dữ liệu khuôn mặt"}), 400
@@ -301,7 +303,6 @@ def recognize_face():
                     "name": name,
                     "time": current_time,
                     "location": client_ip,
-                    "ip": get_ipv4_address(),
                 }
             }
 
