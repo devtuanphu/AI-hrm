@@ -237,15 +237,17 @@ def recognize_face():
     # logging.info(f"Địa chỉ IP của thiết bị: {client_ip}")
 
     data = request.get_json()
-    if "user_id" not in data or "image" not in data or "shop_id" not in data:
-        logging.error("Thiếu tham số 'user_id', 'image', hoặc 'shop_id' trong request.")
-        return jsonify({"success": False, "message": "Thiếu tham số user_id, image hoặc shop_id"}), 400
+    if "user_id" not in data or "image" not in data or "shop_id" not in data or "latitude" not in data or "longitude" not in data:
+        logging.error("Thiếu tham số 'user_id', 'image', 'shop_id', 'latitude', hoặc 'longitude' trong request.")
+        return jsonify({"success": False, "message": "Thiếu tham số bắt buộc"}), 400
 
     user_id = data["user_id"]
     image_b64 = data["image"]
     shop_id = data["shop_id"]
     name = data["name"]
-    client_ip = data["device_ip"]
+    latitude = data["latitude"]
+    longitude = data["longitude"]
+    logging.info(f"vị trí của thiết bị: {latitude}, {longitude}")
 
     try:
         logging.info(f"Xác thực khuôn mặt cho user ID {user_id}...")
@@ -302,7 +304,8 @@ def recognize_face():
                 "checkIn": {
                     "name": name,
                     "time": current_time,
-                    "location": client_ip,
+                    "latitude": latitude,
+                    "longitude": longitude,
                 }
             }
 
@@ -316,13 +319,14 @@ def recognize_face():
                 logging.error(f"Lỗi khi cập nhật thông tin check-in cho shop ID {shop_id}: {response.text}")
 
             logging.info(f"Xác thực thành công cho user ID {user_id}.")
-            logging.info(f"Địa chỉ IP của thiết bị: {client_ip}")
+            logging.info(f"Tọa độ thiết bị: {latitude}, {longitude}")
             logging.info(f"Tổng thời gian xác thực: {time.time() - start_time:.2f}s")
             return jsonify({
                 "success": True,
                 "message": "Xác thực thành công",
                 "time": current_time,
-                "client_ip": client_ip
+                "latitude": latitude,
+                "longitude": longitude
             }), 200
         else:
             logging.error(f"Khuôn mặt không khớp với dữ liệu user ID {user_id}.")
