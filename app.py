@@ -306,6 +306,8 @@ def recognize_face():
                     "time": current_time,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "userId": user_id,
+                    "shopId": shop_id
                 }
             }
 
